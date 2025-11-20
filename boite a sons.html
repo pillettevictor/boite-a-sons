@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de Sons</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            max-width: 800px;
+        }
+        button {
+            padding: 15px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        button:active {
+            background-color: #3e8e41;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Les boutons seront ajoutés ici par JavaScript -->
+    </div>
+
+    <script>
+        // Fonction pour jouer un son à une fréquence donnée
+        function playSound(frequency) {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioCtx.createOscillator();
+            oscillator.type = 'sine'; // Type de son : sine pour un ton pur, ou essaie 'square', 'sawtooth', 'triangle'
+            oscillator.frequency.setValueAtTime(frequency, audioCtx.currentTime);
+            oscillator.connect(audioCtx.destination);
+            oscillator.start();
+            setTimeout(() => {
+                oscillator.stop();
+            }, 500); // Le son dure 0.5 seconde
+        }
+
+        // Créer 50 boutons dynamiquement
+        const container = document.querySelector('.container');
+        for (let i = 1; i <= 50; i++) {
+            const button = document.createElement('button');
+            button.textContent = `Son ${i}`;
+            const freq = 200 + (i * 100); // Fréquences de 300 Hz à 5100 Hz
+            button.addEventListener('click', () => playSound(freq));
+            container.appendChild(button);
+        }
+    </script>
+    <script>
+        function playSound(soundUrl) {
+            const audio = new Audio(soundUrl);
+            audio.play();
+        }
+
+        // Exemple pour les boutons (remplace les fréquences par des URLs)
+        const soundUrls = [
+        'https://example.com/son1.mp3',
+        'https://example.com/son2.mp3',
+        // ... ajoute 48 autres URLs
+        ];
+
+for (let i = 0; i < 50; i++) {
+    const button = document.createElement('button');
+    button.textContent = `Son ${i+1}`;
+    button.addEventListener('click', () => playSound(soundUrls[i]));
+    container.appendChild(button);
+}
+    </script>
+</body>
+</html>
