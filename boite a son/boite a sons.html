@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>11 Sons .WAV – Marche à tous les coups</title>
+    <style>
+        body {font-family:Arial;background:#111;color:#fff;text-align:center;padding:20px;}
+        h1 {margin:40px 0;font-size:2.5em;}
+        .grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:18px;max-width:900px;margin:0 auto;}
+        button {padding:25px;font-size:24px;background:#e74c3c;border:none;border-radius:15px;color:white;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,0.5);transition:0.2s;}
+        button:hover {background:#c0392b;transform:scale(1.08);}
+        button:active {transform:scale(0.94);}
+    </style>
+</head>
+<body>
+    <h1>11 Sons .WAV</h1>
+    <div class="grid"></div>
+
+    <script>
+        // Chemin relatif → marche même sans serveur (quand le HTML est dans le dossier parent)
+        const basePath = "sons/";   // ← ton dossier "sons" qui est juste à côté du fichier HTML
+
+        // Liste tes 11 fichiers .wav exactement comme ils s'appellent (majuscules/minuscules importantes !)
+        const fichiers = [
+            "fart1.wav",
+            "fart2.wav",
+            "fart3.wav",
+            "fart4.wav",
+            "fart5.wav",
+            "fart6.wav",
+            "fart7.wav",
+            "fart8.wav",
+            "fart9.wav",
+            "fart10.wav",
+            "fart11.wav"
+            // Si tes fichiers ont d'autres noms, remplace-les ici (ex: "pet_long.wav", "rot1.wav", etc.)
+        ];
+
+        function jouer(son) {
+            new Audio(basePath + son).play();
+        }
+
+        const grid = document.querySelector('.grid');
+        fichiers.forEach((fichier, i) => {
+            const btn = document.createElement('button');
+            btn.textContent = i + 1;
+            btn.onclick = () => jouer(fichier);
+            grid.appendChild(btn);
+        });
+    </script>
+</body>
+</html>
