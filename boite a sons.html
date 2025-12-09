@@ -3,90 +3,355 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tableau de Sons</title>
+    <title>PerfectOrganize – Organisateur moderne</title>
     <style>
+        :root {
+            --bg: #0f1115;
+            --card: #161922;
+            --accent: #7cf3c6;
+            --accent-2: #8fa7ff;
+            --text: #f3f5fb;
+            --muted: #a7afc7;
+            --border: #1f2430;
+        }
+
+        * { box-sizing: border-box; }
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
             margin: 0;
-            padding: 20px;
+            font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
         }
-        .container {
+
+        .page {
+            max-width: 1080px;
+            margin: 0 auto;
+            padding: 32px 20px 64px;
+        }
+
+        header {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 18px;
+            background: linear-gradient(120deg, rgba(124, 243, 198, 0.12), rgba(143, 167, 255, 0.12)), var(--card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 28px;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.35);
+        }
+
+        .badge-row {
+            display: flex;
+            flex-wrap: wrap;
             gap: 10px;
-            max-width: 800px;
+            color: var(--muted);
+            font-size: 14px;
         }
-        button {
-            padding: 15px;
-            font-size: 16px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
+
+        .badge {
+            padding: 6px 12px;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        h1 { margin: 0; font-size: clamp(32px, 5vw, 44px); line-height: 1.1; }
+        h2 { margin: 0 0 10px; font-size: 26px; }
+        h3 { margin: 0 0 8px; font-size: 20px; }
+
+        p { margin: 0 0 12px; color: var(--muted); }
+
+        .price-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin: 10px 0 6px;
+        }
+
+        .price {
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: var(--text);
+        }
+
+        .variant-select {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin: 12px 0 4px;
+        }
+
+        .chip {
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            text-align: center;
             cursor: pointer;
-            transition: background-color 0.3s;
+            background: rgba(255, 255, 255, 0.03);
+            transition: transform 0.2s ease, border-color 0.2s ease;
         }
-        button:hover {
-            background-color: #45a049;
+
+        .chip:hover { transform: translateY(-1px); border-color: rgba(124, 243, 198, 0.4); }
+        .chip.active { border-color: var(--accent); box-shadow: 0 0 0 1px rgba(124, 243, 198, 0.4); }
+
+        .cta-primary {
+            margin-top: 4px;
+            width: 100%;
+            padding: 14px 18px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            color: #0d1116;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            cursor: pointer;
+            font-weight: 700;
+            box-shadow: 0 12px 30px rgba(124, 243, 198, 0.2);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-        button:active {
-            background-color: #3e8e41;
+
+        .cta-primary:hover { transform: translateY(-1px); box-shadow: 0 16px 34px rgba(124, 243, 198, 0.28); }
+        .cta-primary:active { transform: translateY(0); }
+
+        section { margin-top: 34px; }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 14px;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 18px;
+            box-shadow: 0 14px 40px rgba(0, 0, 0, 0.24);
+            height: 100%;
+        }
+
+        .pill { color: var(--muted); font-size: 14px; }
+        .benefit { display: flex; gap: 10px; align-items: start; }
+        .benefit strong { color: var(--text); }
+        .benefit span { color: var(--muted); }
+
+        .list-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+        .list-card { border-left: 3px solid var(--accent); padding-left: 10px; }
+
+        .cta-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text);
+            cursor: pointer;
+            transition: border-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .cta-secondary:hover { border-color: rgba(124, 243, 198, 0.5); transform: translateY(-1px); }
+
+        .divider { height: 1px; background: var(--border); margin: 24px 0; }
+
+        .faq-item { border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; background: var(--card); }
+        .faq-item + .faq-item { margin-top: 10px; }
+        .faq-item h4 { margin: 0 0 6px; font-size: 16px; }
+        .faq-item p { margin: 0; }
+
+        @media (min-width: 860px) {
+            header { grid-template-columns: 1.2fr 0.8fr; align-items: center; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Les boutons seront ajoutés ici par JavaScript -->
+    <div class="page">
+        <header>
+            <div>
+                <p class="pill">PerfectOrganize</p>
+                <h1>L’organisateur moderne qui transforme votre maison en un espace zen.</h1>
+                <p>Gagnez de la place, optimisez vos tiroirs et profitez d’un intérieur plus propre et apaisant — sans effort.</p>
+                <div class="price-list">
+                    <div class="price"><span>Small (S)</span><strong>14,90 €</strong></div>
+                    <div class="price"><span>Medium (M)</span><strong>17,90 €</strong></div>
+                    <div class="price"><span>Large (L)</span><strong>19,90 €</strong></div>
+                    <div class="price"><span>Pack Mix</span><strong>39,90 €</strong></div>
+                    <div class="price"><span>Pack SmartHome</span><strong>59,90 €</strong></div>
+                </div>
+                <div class="variant-select" id="variants">
+                    <div class="chip active">Small (S)</div>
+                    <div class="chip">Medium (M)</div>
+                    <div class="chip">Large (L)</div>
+                    <div class="chip">Pack Mix</div>
+                    <div class="chip">Pack SmartHome</div>
+                </div>
+                <button class="cta-primary">→ Ajouter au panier</button>
+                <div class="badge-row">
+                    <span class="badge">Livraison offerte dès 20€</span>
+                    <span class="badge">Retour 30 jours</span>
+                    <span class="badge">Paiement Stripe sécurisé</span>
+                </div>
+            </div>
+            <div class="card">
+                <h3>Émotion</h3>
+                <p>Une maison organisée change tout.</p>
+                <p>Un espace rangé apaise instantanément votre esprit. Avec PerfectOrganize, chaque objet trouve enfin sa place. Résultat : une maison plus belle, un quotidien plus simple, une sensation de contrôle et de calme.</p>
+            </div>
+        </header>
+
+        <section>
+            <div class="card-grid">
+                <div class="card">
+                    <h3>Avant / Après</h3>
+                    <p><strong>Avant :</strong> le chaos. <strong>Après :</strong> la satisfaction.</p>
+                    <p class="pill">Un seul organisateur peut transformer un tiroir. Les packs transforment toute la maison.</p>
+                </div>
+                <div class="card">
+                    <h3>Bénéfices clés</h3>
+                    <div class="benefit"><span>✔</span><span><strong>Organisation instantanée</strong> — cuisine, salle de bain, bureau, chambre.</span></div>
+                    <div class="benefit"><span>✔</span><span><strong>Maison plus zen</strong> — un espace visuellement propre réduit le stress.</span></div>
+                    <div class="benefit"><span>✔</span><span><strong>Matériau durable</strong> — résistant, facile à nettoyer, conçu pour durer.</span></div>
+                    <div class="benefit"><span>✔</span><span><strong>Design moderne & minimaliste</strong> — se fond parfaitement dans les intérieurs contemporains.</span></div>
+                    <div class="benefit"><span>✔</span><span><strong>Adapté aux familles et aux jeunes actifs</strong> — pensé pour simplifier la vie de tous les jours.</span></div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Utilisations</h2>
+            <div class="card-grid">
+                <div class="card">
+                    <h3>Dans la cuisine</h3>
+                    <p>Ustensiles, couverts, accessoires…</p>
+                </div>
+                <div class="card">
+                    <h3>Dans la salle de bain</h3>
+                    <p>Maquillage, soins, coton, rasoirs…</p>
+                </div>
+                <div class="card">
+                    <h3>Dans le bureau</h3>
+                    <p>Câbles, fournitures, matériel tech…</p>
+                </div>
+                <div class="card">
+                    <h3>Dans la chambre</h3>
+                    <p>Bijoux, accessoires, objets du quotidien…</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Choisissez votre format</h2>
+            <div class="card-grid">
+                <div class="card">
+                    <h3>Small (S) – 14,90 €</h3>
+                    <p>Pour les petits objets : câbles, cosmétiques, stylos.</p>
+                    <button class="cta-secondary">Ajouter au panier</button>
+                </div>
+                <div class="card">
+                    <h3>Medium (M) – 17,90 €</h3>
+                    <p>Polyvalent. Cuisine, salle de bain, accessoires.</p>
+                    <button class="cta-secondary">Ajouter au panier</button>
+                </div>
+                <div class="card">
+                    <h3>Large (L) – 19,90 €</h3>
+                    <p>Idéal objets volumineux.</p>
+                    <button class="cta-secondary">Ajouter au panier</button>
+                </div>
+                <div class="card">
+                    <h3>Pack Mix (S + M + L) – 39,90 €</h3>
+                    <p>Le combo complet pour débuter.</p>
+                    <button class="cta-secondary">Ajouter au panier</button>
+                </div>
+                <div class="card">
+                    <h3>Pack SmartHome (2M + 2L) – 59,90 €</h3>
+                    <p>Transformez plusieurs pièces d’un coup.</p>
+                    <button class="cta-secondary">Ajouter au panier</button>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Pourquoi choisir PerfectOrganize ?</h2>
+            <div class="list-grid">
+                <div class="card list-card">✔ Conçu avec un design moderne</div>
+                <div class="card list-card">✔ Modules intelligents</div>
+                <div class="card list-card">✔ Résiste à l’eau et à l’usage quotidien</div>
+                <div class="card list-card">✔ Convient à tous les intérieurs</div>
+                <div class="card list-card">✔ Matériau ABS premium</div>
+                <div class="card list-card">✔ Nettoyage facile</div>
+                <div class="card list-card">✔ Durable dans le temps</div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Avis clients</h2>
+            <div class="card-grid">
+                <div class="card">
+                    <h3>⭐⭐⭐⭐⭐ — « Je revis ! »</h3>
+                    <p>Depuis que j’utilise PerfectOrganize, mes tiroirs sont enfin clean.</p>
+                </div>
+                <div class="card">
+                    <h3>⭐⭐⭐⭐⭐ — « Ultra satisfaisant »</h3>
+                    <p>J’ai pris le pack SmartHome. La différence est incroyable.</p>
+                </div>
+                <div class="card">
+                    <h3>⭐⭐⭐⭐⭐ — « Simple & efficace »</h3>
+                    <p>Design minimaliste, super qualité. Je recommande !</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Garantie & sécurité</h2>
+            <div class="card-grid">
+                <div class="card">
+                    <div class="benefit"><span>✔</span><span><strong>Satisfait ou remboursé 30 jours</strong> — Essayez sans risque.</span></div>
+                    <div class="benefit"><span>✔</span><span><strong>Paiement sécurisé Stripe</strong></span></div>
+                    <div class="benefit"><span>✔</span><span><strong>Livraison offerte dès 20€</strong></span></div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>FAQ produit</h2>
+            <div class="faq-item">
+                <h4>Quels sont les délais de livraison ?</h4>
+                <p>3 à 8 jours ouvrés.</p>
+            </div>
+            <div class="faq-item">
+                <h4>Puis-je retourner le produit ?</h4>
+                <p>Oui, dans un délai de 30 jours.</p>
+            </div>
+            <div class="faq-item">
+                <h4>Convient-il à la salle de bain ?</h4>
+                <p>Oui : résistant à l’humidité.</p>
+            </div>
+            <div class="faq-item">
+                <h4>Peut-on les empiler ou les combiner ?</h4>
+                <p>Oui, selon les tailles.</p>
+            </div>
+            <div class="faq-item">
+                <h4>Les packs sont-ils plus avantageux ?</h4>
+                <p>Oui, et ils permettent d’organiser plusieurs pièces.</p>
+            </div>
+        </section>
     </div>
 
     <script>
-        // Fonction pour jouer un son à une fréquence donnée
-        function playSound(frequency) {
-            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            const oscillator = audioCtx.createOscillator();
-            oscillator.type = 'sine'; // Type de son : sine pour un ton pur, ou essaie 'square', 'sawtooth', 'triangle'
-            oscillator.frequency.setValueAtTime(frequency, audioCtx.currentTime);
-            oscillator.connect(audioCtx.destination);
-            oscillator.start();
-            setTimeout(() => {
-                oscillator.stop();
-            }, 500); // Le son dure 0.5 seconde
-        }
-
-        // Créer 50 boutons dynamiquement
-        const container = document.querySelector('.container');
-        for (let i = 1; i <= 50; i++) {
-            const button = document.createElement('button');
-            button.textContent = `Son ${i}`;
-            const freq = 200 + (i * 100); // Fréquences de 300 Hz à 5100 Hz
-            button.addEventListener('click', () => playSound(freq));
-            container.appendChild(button);
-        }
-    </script>
-    <script>
-        function playSound(soundUrl) {
-            const audio = new Audio(soundUrl);
-            audio.play();
-        }
-
-        // Exemple pour les boutons (remplace les fréquences par des URLs)
-        const soundUrls = [
-        'https://example.com/son1.mp3',
-        'https://example.com/son2.mp3',
-        // ... ajoute 48 autres URLs
-        ];
-
-for (let i = 0; i < 50; i++) {
-    const button = document.createElement('button');
-    button.textContent = `Son ${i+1}`;
-    button.addEventListener('click', () => playSound(soundUrls[i]));
-    container.appendChild(button);
-}
+        // Visual feedback for variant selection (static page)
+        const chips = document.querySelectorAll('.chip');
+        chips.forEach((chip) => {
+            chip.addEventListener('click', () => {
+                chips.forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+            });
+        });
     </script>
 </body>
 </html>
